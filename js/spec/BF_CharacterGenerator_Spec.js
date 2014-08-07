@@ -7,7 +7,7 @@ describe("Character Generator", function() {
 	
 	it("should accept valid character class selections", function() {
         chargen.setClass("Fighter");
-		expect(chargen.class["name"]).toEqual("Fighter");
+	expect(chargen.class["name"]).toEqual("Fighter");
         chargen.setClass("Cleric");
         expect(chargen.class["name"]).toEqual("Cleric");
         chargen.setClass("Thief");
@@ -15,9 +15,9 @@ describe("Character Generator", function() {
         chargen.setClass("Mage");
         expect(chargen.class["name"]).toEqual("Mage");
         chargen.setClass("Blork");
-        expect(chargen.class["name"]).toEqual("Not Set");
+        expect(chargen.class["name"]).toEqual("Mage");
         chargen.setClass("");
-        expect(chargen.class["name"]).toEqual("Not Set");
+        expect(chargen.class["name"]).toEqual("Mage");
 	});
     
     it("should accept valid character level selections", function() {
@@ -101,8 +101,8 @@ describe("Character Generator", function() {
         expect(chargen.hitDieType).toEqual(8);
         chargen.setRace("Halfling");
         expect(chargen.hitDieType).toEqual(6);
-        chargen.setClass("Mage");
-        expect(chargen.hitDieType).toEqual(4);
+        chargen.setClass("Mage"); //Halflings cannot be Mages.
+        expect(chargen.hitDieType).toEqual(6);
         chargen.setClass("Thief");
         expect(chargen.hitDieType).toEqual(6);
         chargen.setClass("Cleric");
@@ -226,9 +226,10 @@ describe("Character Generator", function() {
         expect(chargen.getMeleeAttackBonus()).toEqual(11);
         expect(chargen.getRangedAttackBonus()).toEqual(12);
         chargen.setClass("Mage");
-        expect(chargen.getMeleeAttackBonus()).toEqual(10);
-        expect(chargen.getRangedAttackBonus()).toEqual(11);
+        expect(chargen.getMeleeAttackBonus()).toEqual(11);
+        expect(chargen.getRangedAttackBonus()).toEqual(12);
         chargen.setRace("Elf");
+        chargen.setClass("Mage");
         expect(chargen.getMeleeAttackBonus()).toEqual(10);
         expect(chargen.getRangedAttackBonus()).toEqual(10);
     }),
@@ -318,11 +319,11 @@ describe("Random Number Generator", function() {
     it("should only produce numbers between 3 and 18 for attributes", function() {
         var temp;
         var values = new Array(0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0);
-        for(x = 0; x < 10001; ++x) {
-            temp = chargen.generateAttribute();
-            values[temp - 1] += 1;
-            expect(temp).toBeLessThan(19);
-            expect(temp).toBeGreaterThan(2);
+        for(var x = 0; x < 10001; ++x) {
+            chargen.generateAttribute("Strength");
+            values[chargen.attributes.Strength.score - 1] += 1;
+            expect(chargen.attributes.Strength.score).toBeLessThan(19);
+            expect(chargen.attributes.Strength.score).toBeGreaterThan(2);
         }
         console.log(values);
     });
@@ -330,7 +331,7 @@ describe("Random Number Generator", function() {
     it("should roll dice of differing sizes.", function() {
         var temp;
         var values = new Array(0,0,0,0,0,0);
-        for(x = 0; x < 10001; ++x) {
+        for(var x = 0; x < 10001; ++x) {
             temp = chargen.rollDie(6);
             values[temp - 1] += 1;
             expect(temp).toBeLessThan(7);
@@ -339,7 +340,7 @@ describe("Random Number Generator", function() {
         console.log(values);
         
         values = new Array(0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0);
-        for(x = 0; x < 10001; ++x) {
+        for(var x = 0; x < 10001; ++x) {
             temp = chargen.rollDie(20);
             values[temp - 1] += 1;
             expect(temp).toBeLessThan(21);

@@ -9,6 +9,7 @@ and open the template in the editor.
         <title>Basic Fantasy Character Generator</title>
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <link rel="stylesheet" type="text/css" href="css/style.css">
         <script type="text/javascript" src="js/libs/jquery/jquery.js"></script>
         <script type="text/javascript" src="js/BF_CharacterGenerator.js"></script>
     </head>
@@ -26,6 +27,7 @@ and open the template in the editor.
                     <option value="Mage">Mage</option>
                     <option value="Thief">Thief</option>
                     <option value="Cleric">Cleric</option>
+                    <option value="FighterMage" disabled>FighterMage</option>
                 </select>
                 Level
                 <select id="character_level_select">
@@ -169,21 +171,137 @@ and open the template in the editor.
                 </div>   
             </form>
         </div>
-        <div id="combat_stats">
-            Attack Bonus: <span id="base_attack_bonus">0</span>
-            Melee Bonus: <span id="melee_attack_bonus">0</span>
-            Ranged Bonus: <span id="ranged_attack_bonus">0</span>
+        <div>
+            <div id="combat_stats">
+                Attack Bonus: <span id="base_attack_bonus">0</span><br>
+                Melee Bonus: <span id="melee_attack_bonus">0</span><br>
+                Ranged Bonus: <span id="ranged_attack_bonus">0</span><br>
+                AC Bonus: <span id="ac_bonus">0</span><br>
+                Hit Points: <span id="hit_points">0</span>
+            </div>
+            <div id="saving_throws">
+                Death: <span id="death"></span><br>
+                Wands: <span id="wands"></span><br>
+                Paralysis: <span id="paralysis"></span><br>
+                Breath Weapon: <span id="breath"></span><br>
+                Spells: <span id="spells"></span>
+            </div>
+            <div id="spells_list">
+                Spells per Level: <br>
+                <span id="spells_per_level">None</span>
+            </div>
+        </div><br class="clear_both">
+        <div>
+        <div id="turning">
+            Turning Undead: <br>
+            Skeletons: <span id="skeleton"></span> <br>
+            Zombie <span id="zombie"></span> <br>
+            Ghoul: <span id="ghoul"></span> <br>
+            Wight: <span id="wight"></span><br>
+            Wraith: <span id="wraith"></span> <br>
+            Mummy <span id="mummy"></span> <br>
+            Spectre: <span id="spectre"></span> <br>
+            Vampire: <span id="vampire"></span> <br>
+            Ghost: <span id="ghost"></span>
+        </div>
+        <div id="thief_skills">
+            Thief Skills: <br>
+            Open Locks <span id="openLocks"></span> <br>
+            Remove Traps <span id="removeTraps"></span><br> 
+            Pick Pockets: <span id="pickPockets"></span> <br>
+            Move Silently: <span id="moveSilently"></span><br>
+            Climb Walls: <span id="climbWalls"></span> <br>
+            Hide <span id="hide"></span> <br>
+            Listen: <span id="listen"></span>
+        </div>
+        <div id="special_abilities"></div>
         </div>
         <script>
             var cg = new BF_CharacterGenerator();
             
+            function capitalizeFirstLetter(value) {
+                return value.charAt(0).toUpperCase() + value.slice(1);
+            }
+            
+            function setSpecialAbilities() {
+                var tag = $("#special_abilities");
+                tag.html("Special Abilities: <br>");
+                for (x = 0; x < cg.specialAbilities.length; x++) {
+                    tag.append("* " + cg.specialAbilities[x] + "<br>");
+                }
+            }
+            
             function updateSheet() {
+                reloadClassSelect();
+                reloadRaceSelect();
+                reloadAbilitySelects();
                 $("#base_attack_bonus").html(cg.baseAttackBonus);
                 $("#melee_attack_bonus").html(cg.getMeleeAttackBonus());
                 $("#ranged_attack_bonus").html(cg.getRangedAttackBonus());
+                $("#ac_bonus").html(cg.attributes.Dexterity.bonus);
+                $("#hit_points").html(cg.getTotalHP());
+                $("#spells_per_level").html(cg.spells);
+                $("#death").html(cg.getDeathRaySave());
+                $("#wands").html(cg.getMagicWandsSave());
+                $("#paralysis").html(cg.getParalysisSave());
+                $("#breath").html(cg.getDragonBreathSave());
+                $("#spells").html(cg.getSpellsSave());
+                $("#skeleton").html(cg.turnUndead.skeleton);
+                $("#zombie").html(cg.turnUndead.zombie);
+                $("#ghoul").html(cg.turnUndead.ghoul);
+                $("#wight").html(cg.turnUndead.wight);
+                $("#wraith").html(cg.turnUndead.wraith);
+                $("#mummy").html(cg.turnUndead.mummy);
+                $("#spectre").html(cg.turnUndead.spectre);
+                $("#vampire").html(cg.turnUndead.vampire);
+                $("#ghost").html(cg.turnUndead.ghost);
+                $("#openLocks").html(cg.thiefSkills.openLocks);
+                $("#removeTraps").html(cg.thiefSkills.removeTraps);
+                $("#pickPockets").html(cg.thiefSkills.pickPockets);
+                $("#moveSilently").html(cg.thiefSkills.moveSilently);
+                $("#climbWalls").html(cg.thiefSkills.climbWalls);
+                $("#hide").html(cg.thiefSkills.hide);
+                $("#listen").html(cg.thiefSkills.listen);
+                setSpecialAbilities();
+            }
+            
+            function reloadRaceSelect() {
+                $("#character_race_select option").each(function() {
+                    if (cg.races[$(this).val()].allowedClasses.indexOf(cg.class.name) === -1) {
+                        $(this).prop("disabled", true);
+                    } else {
+                        $(this).prop("disabled", false);
+                    }
+                });
+            }
+            
+            function reloadClassSelect() {
+                $("#character_class_select option").each(function() {
+                    if (cg.classAllowed($(this).val()) === false) {
+                        $(this).prop("disabled", true);
+                    } else {
+                        $(this).prop("disabled", false);
+                    }
+                });
+            }
+            
+            function reloadAbilitySelects() {
+                var abilities = ["strength", "dexterity", "constitution", "intelligence", "wisdom", "charisma"];
+                
+                abilities.forEach(function(item) {
+                    var attr = item;
+                    $("#character_" + attr + "_select option").each(function() {
+                        if (cg.abilityAllowed(capitalizeFirstLetter(attr), $(this).val()) === false) {
+                            $(this).prop("disabled", true);
+                        } else {
+                            $(this).prop("disabled", false);
+                        }
+                    });
+                });
             }
             
             $(document).ready(function() {
+                
                 cg.setRace("Human");
                 cg.setClass("Fighter");
                 cg.setLevel(1);
@@ -208,6 +326,7 @@ and open the template in the editor.
                 
                 $("#character_class_select").change(function() {
                     cg.setClass($("#character_class_select").val());
+                    
                     updateSheet();
                 });
                 
@@ -217,11 +336,38 @@ and open the template in the editor.
                 });
                 
                 $("#character_race_select").change(function() {
-                    alert("Race changed.");
+                    cg.setRace($("#character_race_select").val());
+                    
+                    updateSheet();
                 });
                 
                 $("#character_strength_select").change(function() {
                     cg.setAttribute("Strength", $("#character_strength_select").val());
+                    updateSheet();
+                });
+                
+                $("#character_dexterity_select").change(function() {
+                    cg.setAttribute("Dexterity", $("#character_dexterity_select").val());
+                    updateSheet();
+                });
+                
+                $("#character_constitution_select").change(function() {
+                    cg.setAttribute("Constitution", $("#character_constitution_select").val());
+                    updateSheet();
+                });
+                
+                $("#character_wisdom_select").change(function() {
+                    cg.setAttribute("Wisdom", $("#character_wisdom_select").val());
+                    updateSheet();
+                });
+                
+                $("#character_intelligence_select").change(function() {
+                    cg.setAttribute("Intelligence", $("#character_intelligence_select").val());
+                    updateSheet();
+                });
+                
+                $("#character_charisma_select").change(function() {
+                    cg.setAttribute("Charisma", $("#character_charisma_select").val());
                     updateSheet();
                 });
             });

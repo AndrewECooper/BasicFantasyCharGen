@@ -12,6 +12,7 @@ function BF_CharacterGenerator() {
     this.classes = {
         None: {
             name: "Not Set",
+            minAbilities: [],
             hitDie: 0,
             spells: ["None","None","None","None","None","None","None","None","None","None","None","None","None","None","None","None","None","None","None","None"],
             thiefSkills: {
@@ -45,6 +46,7 @@ function BF_CharacterGenerator() {
         },
         Fighter: {
             name: "Fighter",
+            minAbilities: {"Strength": 9},
             hitDie: 8,
             spells: ["None","None","None","None","None","None","None","None","None","None","None","None","None","None","None","None","None","None","None","None"],
             thiefSkills: {
@@ -78,6 +80,7 @@ function BF_CharacterGenerator() {
         },
         Mage: {
             name: "Mage",
+            minAbilities: {"Intelligence": 9},
             hitDie: 4,
             spells: [
                 "None",
@@ -120,6 +123,7 @@ function BF_CharacterGenerator() {
         Thief: {
             name: "Thief",
             hitDie: 6,
+            minAbilities: {"Dexterity": 9},
             spells: ["None","None","None","None","None","None","None","None","None","None","None","None","None","None","None","None","None","None","None","None"],
             thiefSkills: {
                 openLocks: [0,25,30,35,40,45,50,55,60,65,68,71,74,77,80,83,84,85,86,87,88],
@@ -152,6 +156,7 @@ function BF_CharacterGenerator() {
         },
         Cleric: {
             name: "Cleric",
+            minAbilities: {"Wisdom": 9},
             hitDie: 6,
             spells: [
                 "None", "None",
@@ -189,19 +194,63 @@ function BF_CharacterGenerator() {
                 vampire: ["No","No","No","No","No","No","No","No","No","No",20,19,18,17,15,13,11,9,7,5,3],
                 ghost: ["No","No","No","No","No","No","No","No","No","No","No","No",20,19,18,17,15,13,11,9,7]
             }
+        },
+        FighterMage: {
+            name: "FighterMage",
+            minAbilities: {"Strength": 9, "Intelligence": 9},
+            hitDie: 8,
+            spells: [
+                "None",
+                "1","2","2/1","2/2","2/2/1","3/2/2",
+                "3/2/2/1","3/3/2/2","3/3/2/2/1","4/3/3/2/2",
+                "4/4/3/2/2/1","4/4/3/3/2/2","4/4/4/3/2/2",
+                "4/4/4/3/3/2","5/4/4/3/3/2","5/5/4/3/3/2",
+                "5/5/4/4/3/3","6/5/4/4/3/3","6/5/5/4/3/3",
+                "6/5/5/4/4/3"
+            ],
+            thiefSkills: {
+                openLocks: [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+                removeTraps: [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+                pickPockets: [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+                moveSilently: [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+                climbWalls: [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+                hide: [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+                listen: [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0]
+            },
+            attackBonus: [0,1,2,2,3,4,4,5,6,6,6,7,7,8,8,8,9,9,10,10,10],
+            savingThrows: {
+                deathRay: [0,12,11,11,11,11,10,10,9,9,9,9,8,8,7,7,7,7,6,6,5],
+                magicWands: [13,13,12,12,11,11,11,11,10,10,9,9,9,9,8,8,7,7,7,7,6],
+                paralysis: [0,13,13,13,12,12,11,11,10,10,9,9,9,9,8,8,7,7,6,6,5],
+                dragonBreath: [15,15,15,15,14,14,14,14,13,13,12,12,12,12,11,11,10,10,10,10,9],
+                spells: [0,15,14,14,13,13,13,13,12,12,11,11,11,11,10,10,9,9,9,9,8]
+            },
+            turnUndead: {
+                skeleton: ["No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No"],
+                zombie: ["No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No"],
+                ghoul: ["No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No"],
+                wight: ["No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No"],
+                wraith: ["No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No"],
+                mummy: ["No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No"],
+                spectre: ["No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No"],
+                vampire: ["No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No"],
+                ghost: ["No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No"]
+            }
         }
     };
     this.races = {
         Human: {
             specialAbilities: [
                 "+10% experience point bonus."
-            ]
+            ],
+            allowedClasses: ["Fighter", "Mage", "Thief", "Cleric"]
         },
         Dwarf: {
             specialAbilities: [
                 "Darkvision 60'",
                 "Detect slanting passages, traps, shifting walls and new construction on a roll of 1-2 on 1d6"
-            ]
+            ],
+            allowedClasses: ["Fighter", "Thief", "Cleric"]
         },
         Elf: {
             specialAbilities: [
@@ -210,7 +259,8 @@ function BF_CharacterGenerator() {
                 "Find secret doors on cursory look (1 on 1d6).",
                 "Immune to paralyzing attack of ghouls.",
                 "Reduce surprise chance by 1 in 1d6."
-            ]
+            ],
+            allowedClasses: ["Fighter", "Mage", "Thief", "Cleric", "FighterMage"]
         },
         Halfling: {
             specialAbilities: [
@@ -218,11 +268,12 @@ function BF_CharacterGenerator() {
                 "+2 AC vs larger than man-sized creatures.",
                 "+1 initiative.",
                 "90% hide in forest terrain. 70% hide elsewhere."
-            ]
+            ],
+            allowedClasses: ["Fighter", "Thief", "Cleric"]
         }
     };
     
-    this.class = this.classes["None"];
+    this.class = this.classes["Fighter"];
     this.level = 0;
     this.race = "Human";
     this.baseAttackBonus = 0;
@@ -233,12 +284,12 @@ function BF_CharacterGenerator() {
     this.setThiefSkills();
     
     this.attributes = {
-        Strength: {score: 0, bonus: 0},
-        Dexterity: {score: 0, bonus: 0},
-        Constitution: {score: 0, bonus: 0},
-        Intelligence: {score: 0, bonus: 0},
-        Wisdom: {score: 0, bonus: 0},
-        Charisma: {score: 0, bonus: 0}
+        Strength: {score: 10, bonus: 0},
+        Dexterity: {score: 10, bonus: 0},
+        Constitution: {score: 10, bonus: 0},
+        Intelligence: {score: 10, bonus: 0},
+        Wisdom: {score: 10, bonus: 0},
+        Charisma: {score: 10, bonus: 0}
     };
     
     this.savingThrows = {
@@ -263,12 +314,16 @@ function BF_CharacterGenerator() {
 }
 
 BF_CharacterGenerator.prototype.setClass = function(className) {
-    if (className in this.classes) {
-        this.class = this.classes[className];
-    } else {
-        this.class = this.classes["None"];
-    }
+    if (this.classAllowed(className) === false) return false;
+    
+    this.class = this.classes[className];
+    
     this.calculateInfo();
+    this.classChanged();
+};
+
+BF_CharacterGenerator.prototype.classChanged = function() {
+    //Do stuff here.
 };
 
 BF_CharacterGenerator.prototype.setLevel = function(level) {
@@ -278,23 +333,62 @@ BF_CharacterGenerator.prototype.setLevel = function(level) {
         this.level = 0;
     }
     this.calculateInfo();
+    this.levelChanged();
+};
+
+BF_CharacterGenerator.prototype.levelChanged = function() {
+    //Do stuff here.
 };
 
 BF_CharacterGenerator.prototype.setRace = function(race) {
     if (!(race in this.races)) return;
+    if (this.races[race].allowedClasses.indexOf(this.class.name) === -1) return;
+    
     this.race = race;
     this.specialAbilities = this.races[race].specialAbilities;
     this.determineHitDieType();
+    this.raceChanged();
 };
 
-BF_CharacterGenerator.prototype.calculateInfo = function() {
+BF_CharacterGenerator.prototype.raceChanged = function() {
+    //Do stuff here.
+};
+
+BF_CharacterGenerator.prototype.calculateInfo = function(rerollHitPoints) {
+    rerollHitPoints = true;
+    
     this.determineHitDieType();
+    if (rerollHitPoints) {
+        this.hitPoints = this.rollHitPoints();
+    }
     this.hitPoints = this.rollHitPoints();
     this.setSpells();
     this.setThiefSkills();
     this.setBaseAttackBonus();
     this.setSavingThrows();
     this.setTurnUndead();
+};
+
+BF_CharacterGenerator.prototype.classAllowed = function(className) {
+    if (!(className in this.classes)) return false;
+    
+    for (var attr in this.classes[className].minAbilities) {
+        if (attr in this.classes[className].minAbilities) {
+            if (this.attributes[attr].score < this.classes[className].minAbilities[attr]) return false;
+        }
+    }
+    
+    if (this.races[this.race].allowedClasses.indexOf(className) === -1) return false;
+    
+    return true;
+};
+        
+BF_CharacterGenerator.prototype.abilityAllowed = function(attr, score) {
+    if (attr in this.class.minAbilities) {
+        if (score < this.class.minAbilities[attr]) return false;
+    }
+    
+    return true;
 };
 
 BF_CharacterGenerator.prototype.determineHitDieType = function() {
@@ -346,11 +440,18 @@ BF_CharacterGenerator.prototype.setSpells = function() {
 
 BF_CharacterGenerator.prototype.rollHitPoints = function() {
     var value = 0;
+    var tmp = 0;
     
     for (x = 1; x <= this.level; ++x) {
-        value += this.rollDie(this.hitDieType);
+        tmp = this.rollDie(this.hitDieType) + this.attributes.Constitution.bonus;
+        if (tmp < 1) tmp = 1;
+        value += tmp;
     }
     return value;
+};
+
+BF_CharacterGenerator.prototype.getTotalHP = function() {
+    return this.hitPoints;
 };
 
 BF_CharacterGenerator.prototype.setAttribute = function(attribute, value) {
@@ -362,20 +463,38 @@ BF_CharacterGenerator.prototype.setAttribute = function(attribute, value) {
         this.attributes[attribute].score = 0;
     }
     this.attributes[attribute].bonus = this.abilityBonuses[this.attributes[attribute].score];
+    
+    this.calculateInfo(false);
 };
+
+
 
 BF_CharacterGenerator.prototype.generateScores = function() {
-    this.setAttribute("Strength", this.generateAttribute());
-    this.setAttribute("Dexterity", this.generateAttribute());
-    this.setAttribute("Constitution", this.generateAttribute());
-    this.setAttribute("Wisdom", this.generateAttribute());
-    this.setAttribute("Intelligence", this.generateAttribute());
-    this.setAttribute("Charisma", this.generateAttribute());
+    this.generateAttribute("Strength");
+    this.generateAttribute("Dexterity");
+    this.generateAttribute("Constitution");
+    this.generateAttribute("Wisdom");
+    this.generateAttribute("Intelligence");
+    this.generateAttribute("Charisma");
 };
 
-BF_CharacterGenerator.prototype.generateAttribute = function() {
-    var value = this.rollDie(6) + this.rollDie(6) + this.rollDie(6);
-    return value;
+BF_CharacterGenerator.prototype.generateAttribute = function(attr) {
+    var oldValue = 0;
+    
+    oldValue = this.attributes[attr].score;
+    do {
+        this.setAttribute(attr, this.rollScore());
+        if (this.classAllowed(this.class.name)) {
+            valid = true;
+        } else {
+            valid = false;
+            this.setAttribute(attr, oldValue);
+        }
+    } while (!valid);
+};
+
+BF_CharacterGenerator.prototype.rollScore = function() {
+    return this.rollDie(6) + this.rollDie(6) + this.rollDie(6);
 };
 
 BF_CharacterGenerator.prototype.rollDie = function(sides) {
