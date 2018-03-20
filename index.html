@@ -10,8 +10,8 @@ and open the template in the editor.
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <link rel="stylesheet" type="text/css" href="css/style.css">
-        <script type="text/javascript" src="js/libs/jquery/jquery.js"></script>
-        <script type="text/javascript" src="js/BF_CharacterGenerator.js"></script>
+        <script type="text/javascript" src="js/jquery-3.3.1.min.js"></script>
+        <script type="text/javascript" src="js/BasicFantasyCharGenerator.js"></script>
     </head>
     <body>
         <div class="input_form">
@@ -217,7 +217,7 @@ and open the template in the editor.
         <div id="special_abilities"></div>
         </div>
         <script>
-            var cg = new BF_CharacterGenerator();
+            var cg = new BasicFantasyCharGenerator();
             
             function capitalizeFirstLetter(value) {
                 return value.charAt(0).toUpperCase() + value.slice(1);
