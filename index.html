@@ -187,9 +187,11 @@ and open the template in the editor.
                             <option value="18">18</option>
                         </select>
                     </div>
-                    <div class="large-12 medium-12 cell">
+                    <fieldset class="large-12 medium-12 cell">
                         <input type="button" class="button" id="roll_ability_scores" value="Roll Scores" />
-                    </div>
+                        
+                        <input type="checkbox" id="switch_primary" style="margin-left: 15px" onclick="toggleSwitchPrimary()"><label for="switch_primary">Switch highest score with Primary attribute.</label>
+                    </fieldset>
                 </div>   
             </div>
             
@@ -418,7 +420,8 @@ and open the template in the editor.
             
             function reloadClassSelect() {
                 $("#character_class_select option").each(function() {
-                    if (cg.classAllowed($(this).val()) === false) {
+                    if ((cg.classAllowed($(this).val()) === false && !cg.switchPrimary)
+                        || (cg.classAllowed($(this).val()) === false && $(this).val() == "FighterMage")) {
                         $(this).prop("disabled", true);
                     } else {
                         $(this).prop("disabled", false);
@@ -437,8 +440,23 @@ and open the template in the editor.
                         } else {
                             $(this).prop("disabled", false);
                         }
+                        //if (cg.attributes[capitalizeFirstLetter(attr)].score == $(this).val()) 
                     });
                 });
+            }
+
+            function toggleSwitchPrimary() {
+                cg.setSwitchPrimary($("#switch_primary").prop("checked"));
+                setAttributes();
+            }
+
+            function setAttributes() {
+                $("#character_strength_select").val(cg.attributes.Strength.score).change();
+                $("#character_dexterity_select").val(cg.attributes.Dexterity.score);
+                $("#character_constitution_select").val(cg.attributes.Constitution.score);
+                $("#character_intelligence_select").val(cg.attributes.Intelligence.score);
+                $("#character_wisdom_select").val(cg.attributes.Wisdom.score);
+                $("#character_charisma_select").val(cg.attributes.Charisma.score);
             }
             
             $(document).ready(function() {
@@ -457,17 +475,15 @@ and open the template in the editor.
                 
                 $("#roll_ability_scores").click(function() {
                     cg.generateScores();
-                    $("#character_strength_select").val(cg.attributes.Strength.score).change();
-                    $("#character_dexterity_select").val(cg.attributes.Dexterity.score);
-                    $("#character_constitution_select").val(cg.attributes.Constitution.score);
-                    $("#character_intelligence_select").val(cg.attributes.Intelligence.score);
-                    $("#character_wisdom_select").val(cg.attributes.Wisdom.score);
-                    $("#character_charisma_select").val(cg.attributes.Charisma.score);
+                    if (cg.switchPrimary) cg.switchPrimaryAttribute();
+                    setAttributes();
+                    updateSheet();
                 });
                 
                 $("#character_class_select").change(function() {
                     cg.setClass($("#character_class_select").val());
-                    
+                    if (cg.switchPrimary) cg.switchPrimaryAttribute();
+                    setAttributes();
                     updateSheet();
                 });
                 

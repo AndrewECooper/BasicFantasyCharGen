@@ -1,5 +1,6 @@
 class BasicFantasyCharGenerator {
     constructor() {
+        this.switchPrimary = false;
         this.abilityBonuses = [0,0,0,-3,-2,-2,-1,-1,-1,0,0,0,0,1,1,1,2,2,3]; 
         this.classes = {
             None: {
@@ -306,8 +307,45 @@ class BasicFantasyCharGenerator {
         };
     }
 
+    setSwitchPrimary(value) {
+        this.switchPrimary = value;
+        if (this.switchPrimary) this.switchPrimaryAttribute();
+    }
+
+    switchPrimaryAttribute() {
+        let sorted = Object.keys(this.attributes)
+            .map(attr => ({ key: attr, value: this.attributes[attr] }))
+            .sort((a, b) => b.value.score - a.value.score);
+
+        switch(this.class.name) {
+            case "Fighter":
+                if (sorted[0].key != "Strength") this.switchScores("Strength", sorted[0]);
+                break;
+            case "Mage":
+                if (sorted[0].key != "Intelligence") this.switchScores("Intelligence", sorted[0]);
+                break;
+            case "Thief":
+                if (sorted[0].key != "Dexterity") this.switchScores("Dexterity", sorted[0]);
+                break;
+            case "Cleric":
+                if (sorted[0].key != "Wisdom") this.switchScores("Wisdom", sorted[0]);
+                break;
+        }
+    }
+
+    switchScores(firstScoreName, secondScore) {
+        let tmp = this.attributes[firstScoreName];
+        console.log("Switching Scores: ", {firstScoreName: this.attributes[firstScoreName], "secondScore": this.attributes[secondScore.key], "Temp": tmp});
+        this.attributes[firstScoreName] = secondScore.value;
+        console.log("Switching Scores: ", {firstScoreName: this.attributes[firstScoreName], "secondScore": this.attributes[secondScore.key], "Temp": tmp});
+        this.attributes[secondScore.key] = tmp;
+        console.log("Switching Scores: ", {firstScoreName: this.attributes[firstScoreName], "secondScore": this.attributes[secondScore.key], "Temp": tmp});
+        console.log("Final Attributes: ", this.attributes);
+    }
+
+
     setClass(className) {
-        if (this.classAllowed(className) === false) return false;
+        if (this.classAllowed(className) === false && !this.switchPrimary) return false;
         
         this.class = this.classes[className];
         
